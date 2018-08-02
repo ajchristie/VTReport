@@ -1,0 +1,20 @@
+{% extends 'getrep/base.html' %}
+
+{% block title %} VT Query {% endblock %}
+
+
+{% block body_block %}
+{% if error_message %}<p align=center><strong> {{ error_message }} </strong></p> {% endif %}
+
+<div align="center">
+  <h2>Upload a file containing MD5/SHA digests</h2>
+  <p>File must be .txt with digests on separate lines</p>
+  <form method="POST" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{ form }}
+    <br/>
+    <input type="submit" />
+
+  </form>
+</div>
+{% endblock %}

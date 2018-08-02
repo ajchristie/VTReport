@@ -1,0 +1,41 @@
+{% extends 'getrep/base.html' %}
+
+{% block title %} VT Query Results {% endblock %}
+
+{% block body_block %}
+<div align="center">
+  <h1> Results </h1>
+  <table style="width: 100%; border: 1px solid black; border-spacing: 5px;">
+    <tr>
+      <th>Search Hash</th>
+      <th>Fortinet Name</th>
+      <th>Number of Engines</th>
+      <th>Scan Date</th>
+    </tr>
+
+    {% for e, item in enumerate(records) %}
+        {% if item['res_code'] == 1 %}
+            <tr>
+              <td align="center"> {% request.session['hashlist'][e] %} </td>
+              <td align="center"> {{ item['fortinet_name'] }} </td>
+              <td align="center"> {{ item['num_engines'] }} </td>
+              <td align="center"> {{ item['scandate'] }} </td>
+            </tr>
+        {% elif item['res_code'] == 0 %}
+            <tr>
+              <td align="center"> {% request.session['hashlist'][e] %} </td>
+              <td colspan="3" align="center"> Not present in records. </td>
+            </tr>
+        {% elif item['res_code'] == -2 %}
+            <tr>
+              <td align="center"> {% request.session['hashlist'][e] %} </td>
+              <td colspan="3" align="center"> Request is queued in VirusTotal. </td>
+            </tr>
+        {% elif item['res_code'] == -99 %}
+            <tr>
+              <td align="center"> {% request.session['hashlist'][e] %} </td>
+              <td colspan="3" align="center"> Pending. Refresh later to see record. </td>
+            </tr>
+        {% endif %}
+</div>
+{% endblock %}

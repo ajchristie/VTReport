@@ -1,0 +1,25 @@
+
+
+{% for e, item in enumerate(records) %}
+    {% if item['res_code'] == 1 %}
+        <tr>
+          <td align="center"> {% request.session['hashlist'][e] %} </td>
+          <td align="center"> {{ item['fortinet_name'] }} </td>
+          <td align="center"> {{ item['num_engines'] }} </td>
+          <td align="center"> {{ item['scandate'] }} </td>
+        </tr>
+    {% elif item['res_code'] == 0 %}
+        <tr>
+          <td align="center"> {% request.session['hashlist'][e] %} </td>
+          <td colspan="3" align="center"> Not present in records </td>
+        </tr>
+    {% elif item['res_code'] == -2 %}
+        <tr>
+          <td align="center"> {% request.session['hashlist'][e] %} </td>
+          <td colspan="3" align="center"> Request is queued </td>
+        </tr>
+    {% elif item['res_code'] == -99 %}
+        <tr>
+          <td align="center"> {% request.session['hashlist'][e] %} </td>
+          <td colspan="3" align="center"> Pending. Refresh to see record. </td>
+    {% endif %}
