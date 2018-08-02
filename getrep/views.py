@@ -8,7 +8,7 @@ from .models import VTReport
 from .forms import UploadFileForm
 from .tasks import get_add_records
 from utils.helpers import cache_grab, get_report, get_is, prune_and_dummy
-# probably need some kind of celery import here too
+# probably need some kind of celery import here too, whatever you need to call tasks
 
 
 
@@ -23,8 +23,8 @@ def index(request):
                 return render(request, 'index.html', {'form':form, 'error_message': "Your file was empty."})
             else: ## file not empty
                 hashes = [line.strip(['\r','\n']) for line in hashes]
-                request.session['hashlist'].extend(hashes) ## session dict contains all hashes submitted across session
-                prune_and_dummy(hashes) ## remove hashes with cached records
+                request.session['hashlist'].extend(hashes) ## session dict contains all hashes submitted across session; need to check for redundancies
+                prune_and_dummy(hashes) ## remove hashes with cached records before querying -- should you just use the session list from here on to make sure nothing gets orphaned
                 if hashes: ## still uncached hashes to query
                     get_add_records.delay(hashes)
                 return HttpResponseRedirect(reverse('results'))

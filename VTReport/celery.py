@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from celery.schedules import crontab
+from getrep.models import VTReport
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'VTReport.settings')
@@ -14,18 +15,17 @@ app = Celery('VTReport')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
+
 # Add a regular task that clears the query database every 24hrs.
 @app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
+def setup_periodic_tasks(sender):
     # Executes every morning at 4:00 a.m.
     sender.add_periodic_task(
         crontab(hour=4, minute=0),
-        # define the task here,
+        VTReport.objects.filter(not is_recent).delete()
     )
-
-
-# Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):

@@ -15,7 +15,7 @@ def prune_and_dummy(hashlist):
         if VTReport.objects.filter(h=x).exists():
             hashlist.pop(x)
         else:
-            VTReport(h=x, res_code=69).save()
+            VTReport(h=x, res_code=-99).save()
 
 
 def cache_grab(hashlist):
@@ -64,28 +64,3 @@ def hashtype(digest):
 
 def get_is(thelist, i):
     return [x[i] for x in thelist]
-
-# class get_add_records_task(JobtasticTask):
-#
-#     significant_kwargs = [(hashlist, str)]
-#     herd_avoidance_timeout = 21600
-#     cache_duration = 216000
-#
-#
-#     def get_add_records(hashlist):
-#         """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database. Any errors are stored in a list and returned.
-#
-#         """
-#         errlist = []
-#         for loop, x in enumerate(hashlist):
-#             params = {'apikey': api_key, 'resource': x}
-#             try:
-#                 response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, proxies=None)
-#             except requests.RequestException as e:
-#                 errlist.append(str(e))
-#             VTReport.objects.get(hashtype(x)=x).update()
-#             rec = make_rec(response.json())
-#             rec.save()
-#             if loop % 4 == 0: ## Protection for VirusTotal API limits
-#                 sleep(60)
-#         return errlist
