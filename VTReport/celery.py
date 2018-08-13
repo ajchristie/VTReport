@@ -22,7 +22,7 @@ app.autodiscover_tasks()
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender):
     # Executes every morning at 4:00 a.m.
-    sender.add_periodic_task(
+    sender.add_periodic_task( # Clear expired db entries
         crontab(hour=4, minute=0),
         VTReport.objects.filter(not is_recent).delete()
     )

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
+from django.contrib.sessions.models import Session
 import datetime
 
 
@@ -15,9 +16,10 @@ class VTReport(models.Model):
     scandate = models.DateTimeField()
     res_code = models.SmallIntegerField(null=True,default=null)
     queried = models.DateTimeField(auto_now_add=True)
+    sessions = models.ManyToManyField(Session)
 
     def __str__(self):
-        return self.md5
+        return "VirusTotal report for " + self.md5
 
     def is_recent(self):
         return timezone.now() - datetime.timedelta(days=1) <= self.queried
