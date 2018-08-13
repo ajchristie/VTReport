@@ -1,8 +1,9 @@
 .DS_Store
 notes
+*.pyc
 getrep/__pycache__
 getrep/migrations
 getrep/.DS_Store
 VTReport/__pycache__
 VTReport/settings.py
-VTReport/local_setting.cfg
+VTReport/local_settings.cfg
