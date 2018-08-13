@@ -6,10 +6,11 @@ from time import sleep
 from VTReport.settings import api_key
 #from django.conf import settings
 from getrep.models import VTReport
+from utils.helpers import make_rec, hashtype
 
 
 @shared_task
-def get_add_records(hashlist):
+def get_add_records(hashlist, sess):
     """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database. Any errors are stored in a list and returned.
 
     """
@@ -20,9 +21,8 @@ def get_add_records(hashlist):
             response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, proxies=None)
         except requests.RequestException as e:
             errlist.append(str(e))
-        VTReport.objects.get(hashtype(x)=x).update()
-        # need to add rate-limiting handling here? If we just have one worker, probs not
         rec = make_rec(response.json())
-        rec.save()
+        rec.save()  # need to save before session can be associated
+        rec.sessions.add(sess)
 
     return errlist
