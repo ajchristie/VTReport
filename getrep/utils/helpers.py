@@ -6,7 +6,7 @@ from VTReport.settings import api_key
 from getrep.models import VTReport
 #SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
-def prune_and_dummy(hashlist, sess):
+def prune(hashlist, sess):
     """ Given a list of hash digests, prunes the list of hashes for which records are already present in the database and leaves a list of hashes that should be submitted to VirusTotal. """
 
     for x in hashlist:
@@ -17,10 +17,9 @@ def prune_and_dummy(hashlist, sess):
 
 
 def cache_grab(sess):
-    """ Passed a session, collects the previously cached records from the database and returns them in a list. """
+    """ Passed a session, collects the previously cached records from the database and returns them as a Queryset. """
 
-    recset = sess.vtreport_set.all() # this is a Queryset
-    return recset[::1] # slice evaluates the QS and returns a list; might be good to delay this
+    return sess.vtreport_set.all() # this is a Queryset
 
 def make_rec(json_rec):
     """ Creates a database entry from the passed json record as obtained from VirusTotal and returns it. """

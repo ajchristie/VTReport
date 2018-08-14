@@ -23,11 +23,11 @@ def index(request):
                 return render(request, 'index.html', {'form':form, 'error_message': "Your file was empty."})
             else: ## file not empty
                 hashes = [line.strip(['\r','\n']) for line in hashes]
-                request.session['hashlist'].extend(hashes) ## session dict contains all hashes submitted across session; need to check for redundancies
-                prune_and_dummy(hashes) ## remove hashes with cached records before querying -- should you just use the session list from here on to make sure nothing gets orphaned
+                prune(hashes, request.session)
                 if hashes: ## still uncached hashes to query
-                    get_add_records.delay(hashes)
-                return HttpResponseRedirect(reverse('results'))
+                    error_list = get_add_records.delay(hashes)
+                    sleep(1.5) ## allow some queries to complete before display
+                return HttpResponseRedirect(reverse('results', {'errors': error_list}))
 
     else:  ## ie, request.method == GET
         form = UploadFileForm()
@@ -36,7 +36,5 @@ def index(request):
 
 
 def results(request):
-
-    records = cache_grab(request.session['hashlist'])
-    ## make the records pairs if session isn't accessible in template
+    records = cache_grab(request.session)
     return render(request, 'results.html', {'records': records})

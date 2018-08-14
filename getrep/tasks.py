@@ -11,7 +11,7 @@ from utils.helpers import make_rec, hashtype
 
 @shared_task
 def get_add_records(hashlist, sess):
-    """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database. Any errors are stored in a list and returned.
+    """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database and adds the session to that entry's session_set. Any errors are stored in a list and returned.
 
     """
     errlist = []

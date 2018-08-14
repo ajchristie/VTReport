@@ -25,6 +25,7 @@ def setup_periodic_tasks(sender):
     sender.add_periodic_task( # Clear expired db entries
         crontab(hour=4, minute=0),
         VTReport.objects.filter(not is_recent).delete()
+        ## check that this filter actually works
     )
 
 @app.task(bind=True)

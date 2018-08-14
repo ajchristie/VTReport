@@ -38,4 +38,12 @@
             </tr>
         {% endif %}
 </div>
+<br>
+{% if errors %}
+<p> The following errors were returned by VirusTotal: </p>
+<ul>
+{% for error in errors %}
+  <li> {{ error }} </li>
+</ul>
+{% endif %}
 {% endblock %}
