@@ -43,6 +43,3 @@ def hashtype(digest):
         return 'sha256'
     else:
         return 'unk'
-
-def get_is(thelist, i):
-    return [x[i] for x in thelist]

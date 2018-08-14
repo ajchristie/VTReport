@@ -7,7 +7,7 @@ from django.urls import reverse
 from .models import VTReport
 from .forms import UploadFileForm
 from .tasks import get_add_records
-from utils.helpers import cache_grab, get_report, get_is, prune_and_dummy
+from utils.helpers import cache_grab, get_report, prune_and_dummy
 # probably need some kind of celery import here too, whatever you need to call tasks
 
 

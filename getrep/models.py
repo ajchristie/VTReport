@@ -19,7 +19,7 @@ class VTReport(models.Model):
     sessions = models.ManyToManyField(Session)
 
     def __str__(self):
-        return "VirusTotal report for MD5:" + self.md5
+        return "VirusTotal report for MD5:" + str(self.md5)
 
     def is_recent(self):
         return timezone.now() - datetime.timedelta(days=1) <= self.queried
