@@ -14,7 +14,7 @@ class VTReport(models.Model):
     num_engines = models.PositiveIntegerField(default=0)
     fortinet_name = models.CharField(default="")
     scandate = models.DateTimeField()
-    res_code = models.SmallPositiveIntegerField(null=True,default=null)
+    res_code = models.SmallIntegerField(null=True,default=null)
     queried = models.DateTimeField(auto_now_add=True)
     sessions = models.ManyToManyField(Session)
 
