@@ -11,7 +11,7 @@ from utils.helpers import make_rec, hashtype
 
 @shared_task
 def get_add_records(hashlist, sess):
-    """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database and adds the session to that entry's session_set. Any errors are stored in a list and returned.
+    """ Queries VirusTotal for the hashes contained in hashlist and adds them to the cache database and adds the session to that entry's sessions set. Any errors are stored in a list and returned.
 
     """
     errlist = []
@@ -22,7 +22,7 @@ def get_add_records(hashlist, sess):
         except requests.RequestException as e:
             errlist.append(str(e))
         rec = make_rec(response.json())
-        rec.save()  # need to save before session can be associated
+        rec.save()  # need to save to db before session can be associated
         rec.sessions.add(sess)
 
     return errlist

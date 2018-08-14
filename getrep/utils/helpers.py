@@ -7,7 +7,7 @@ from getrep.models import VTReport
 #SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 def prune(hashlist, sess):
-    """ Given a list of hash digests, prunes the list of hashes for which records are already present in the database and leaves a list of hashes that should be submitted to VirusTotal. """
+    """ Given a list of hash digests, prunes the list of hashes for which records are already present in the database, adds sess to the record's sessions set, and leaves a list of hashes that should be submitted to VirusTotal. """
 
     for x in hashlist:
         h= hashtype(x)
@@ -22,7 +22,7 @@ def cache_grab(sess):
     return sess.vtreport_set.all() # this is a Queryset
 
 def make_rec(json_rec):
-    """ Creates a database entry from the passed json record as obtained from VirusTotal and returns it. """
+    """ Creates a database entry from the passed json record as obtained from VirusTotal and returns it. NOTE: the returned database entry is not saved before being returned. """
 
     if json_rec['response_code'] == 1:
         return VTReport(num_engines=json_rec['total'],
@@ -33,7 +33,7 @@ def make_rec(json_rec):
                         res_code=json_response['response_code'])
 
 def hashtype(digest):
-    """ Determines (based solely on length) and returns as a string the hashtype of a digest. """
+    """ Determines (based solely on character length) and returns as a string the hashtype of a digest. """
 
     if len(digest) == 32:
         return 'md5'
